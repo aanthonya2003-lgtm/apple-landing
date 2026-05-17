@@ -1,21 +1,88 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { AppleLogo } from "./AppleLogo";
 import { URLS } from "../data/assets";
 
-type NavItem = { label: string; href: string };
+interface SubLink { label: string; href: string; highlight?: boolean; }
+interface NavCategory { label: string; href: string; heading: string; links: SubLink[]; }
 
-const NAV_ITEMS: NavItem[] = [
-  { label: "Store", href: URLS.store },
-  { label: "Mac", href: URLS.mac },
-  { label: "iPad", href: URLS.ipad },
-  { label: "iPhone", href: URLS.iphone },
-  { label: "Watch", href: URLS.watch },
-  { label: "Vision", href: URLS.vision },
-  { label: "AirPods", href: URLS.airpods },
-  { label: "TV & Home", href: URLS.tvHome },
-  { label: "Entertainment", href: URLS.entertainment },
-  { label: "Accessories", href: URLS.accessories },
-  { label: "Support", href: URLS.support },
+const NAV: NavCategory[] = [
+  { label: "Store", href: URLS.store, heading: "Shop", links: [
+    { label: "Shop the Latest", href: URLS.store, highlight: true },
+    { label: "Mac", href: URLS.mac }, { label: "iPad", href: URLS.ipad },
+    { label: "iPhone", href: URLS.iphone }, { label: "Apple Watch", href: URLS.watch },
+    { label: "Accessories", href: URLS.accessories },
+  ]},
+  { label: "Mac", href: URLS.mac, heading: "Explore Mac", links: [
+    { label: "MacBook Pro", href: URLS.macbookPro, highlight: true },
+    { label: "MacBook Air", href: "https://www.apple.com/macbook-air/" },
+    { label: "iMac", href: "https://www.apple.com/imac/" },
+    { label: "Mac mini", href: "https://www.apple.com/mac-mini/" },
+    { label: "Mac Studio", href: "https://www.apple.com/mac-studio/" },
+    { label: "Compare Mac", href: "https://www.apple.com/mac/compare/" },
+  ]},
+  { label: "iPad", href: URLS.ipad, heading: "Explore iPad", links: [
+    { label: "iPad Pro", href: URLS.ipadPro, highlight: true },
+    { label: "iPad Air", href: "https://www.apple.com/ipad-air/" },
+    { label: "iPad", href: URLS.ipad },
+    { label: "iPad mini", href: "https://www.apple.com/ipad-mini/" },
+    { label: "Apple Pencil", href: "https://www.apple.com/apple-pencil/" },
+    { label: "Compare iPad", href: "https://www.apple.com/ipad/compare/" },
+  ]},
+  { label: "iPhone", href: URLS.iphone, heading: "Explore iPhone", links: [
+    { label: "iPhone 16 Pro", href: URLS.iphone16Pro, highlight: true },
+    { label: "iPhone 16", href: "https://www.apple.com/iphone-16/" },
+    { label: "iPhone 15", href: "https://www.apple.com/iphone-15/" },
+    { label: "Compare iPhone", href: "https://www.apple.com/iphone/compare/" },
+    { label: "AirPods", href: URLS.airpods }, { label: "AppleCare+", href: URLS.appleCare },
+  ]},
+  { label: "Watch", href: URLS.watch, heading: "Explore Apple Watch", links: [
+    { label: "Apple Watch Series 10", href: URLS.watch, highlight: true },
+    { label: "Apple Watch Ultra 2", href: "https://www.apple.com/apple-watch-ultra-2/" },
+    { label: "Apple Watch SE", href: "https://www.apple.com/apple-watch-se/" },
+    { label: "Apple Watch Nike", href: "https://www.apple.com/apple-watch-nike/" },
+    { label: "Bands", href: "https://www.apple.com/shop/watch/bands" },
+    { label: "AppleCare+", href: URLS.appleCare },
+  ]},
+  { label: "Vision", href: URLS.vision, heading: "Explore Vision", links: [
+    { label: "Apple Vision Pro", href: URLS.vision, highlight: true },
+    { label: "Apple Immersive Video", href: URLS.vision },
+    { label: "Shop Apple Vision Pro", href: URLS.vision },
+  ]},
+  { label: "AirPods", href: URLS.airpods, heading: "Explore AirPods", links: [
+    { label: "AirPods Pro 2", href: URLS.airpods, highlight: true },
+    { label: "AirPods 4", href: URLS.airpods },
+    { label: "AirPods Max", href: URLS.airpods },
+    { label: "Compare AirPods", href: "https://www.apple.com/airpods/compare/" },
+  ]},
+  { label: "TV & Home", href: URLS.tvHome, heading: "Explore TV & Home", links: [
+    { label: "Apple TV 4K", href: URLS.appletv, highlight: true },
+    { label: "HomePod", href: "https://www.apple.com/homepod/" },
+    { label: "HomePod mini", href: "https://www.apple.com/homepod-mini/" },
+    { label: "AirTag", href: "https://www.apple.com/airtag/" },
+  ]},
+  { label: "Entertainment", href: URLS.entertainment, heading: "Entertainment", links: [
+    { label: "Apple TV+", href: URLS.appleTvPlus, highlight: true },
+    { label: "Apple Music", href: URLS.appleMusic },
+    { label: "Apple Arcade", href: URLS.appleArcade },
+    { label: "Apple Fitness+", href: URLS.appleFitness },
+    { label: "Apple News+", href: URLS.appleNews },
+    { label: "Apple Podcasts", href: URLS.podcasts },
+  ]},
+  { label: "Accessories", href: URLS.accessories, heading: "Accessories", links: [
+    { label: "Mac", href: URLS.accessories, highlight: true },
+    { label: "iPad", href: URLS.accessories },
+    { label: "iPhone", href: URLS.accessories },
+    { label: "Apple Watch", href: URLS.accessories },
+    { label: "AirPods", href: URLS.accessories },
+  ]},
+  { label: "Support", href: URLS.support, heading: "Support", links: [
+    { label: "iPhone Support", href: URLS.support, highlight: true },
+    { label: "Mac Support", href: URLS.support },
+    { label: "iPad Support", href: URLS.support },
+    { label: "Apple Account", href: URLS.account },
+    { label: "Contact Apple", href: URLS.support },
+  ]},
 ];
 
 function SearchIcon() {
@@ -27,6 +94,9 @@ function BagIcon() {
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [isTouch, setIsTouch] = useState(false);
+  const closeTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -35,27 +105,67 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: none) or (pointer: coarse)");
+    const update = () => setIsTouch(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpenIndex(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    if (!isTouch || openIndex === null) return;
+    const onTap = (e: MouseEvent) => {
+      const t = e.target as Element;
+      if (!t.closest("[data-nav-root]")) setOpenIndex(null);
+    };
+    document.addEventListener("click", onTap);
+    return () => document.removeEventListener("click", onTap);
+  }, [isTouch, openIndex]);
+
+  const clearTimer = () => {
+    if (closeTimerRef.current) { window.clearTimeout(closeTimerRef.current); closeTimerRef.current = null; }
+  };
+  const openAt = (i: number) => { clearTimer(); setOpenIndex(i); };
+  const closeWithDelay = () => {
+    clearTimer();
+    closeTimerRef.current = window.setTimeout(() => setOpenIndex(null), 150);
+  };
+
   return (
-    <header className={`nav-blur fixed top-0 left-0 right-0 z-50 border-b border-transparent ${scrolled ? "scrolled" : ""}`} style={{ height: 44 }}>
+    <header data-nav-root
+      className={`nav-blur fixed top-0 left-0 right-0 z-50 border-b border-transparent ${scrolled || openIndex !== null ? "scrolled" : ""}`}
+      style={{ height: 44 }}
+      onMouseLeave={() => !isTouch && closeWithDelay()}>
       <nav className="apple-container-wide h-full flex items-center justify-between text-[#1d1d1f]" aria-label="Global">
         <a href={URLS.home} aria-label="Apple" className="flex items-center px-2 -ml-2 opacity-80 hover:opacity-100 transition-opacity">
           <AppleLogo size={18} />
         </a>
         <ul className="hidden md:flex items-center gap-2 lg:gap-1 overflow-x-auto no-scrollbar flex-1 justify-center px-4" role="menubar">
-          {NAV_ITEMS.map((item) => (
-            <li key={item.label} role="none">
-              <a href={item.href} role="menuitem" className="block px-3 py-1.5 text-[12px] text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors whitespace-nowrap tracking-tight">
-                {item.label}
-              </a>
-            </li>
-          ))}
+          {NAV.map((cat, i) => {
+            const isOpen = openIndex === i;
+            return (
+              <li key={cat.label} role="none" onMouseEnter={() => !isTouch && openAt(i)}>
+                <a href={cat.href} role="menuitem"
+                  className="nav-dropdown-trigger block px-3 py-1.5 text-[12px] text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors whitespace-nowrap tracking-tight"
+                  aria-haspopup="true" aria-expanded={isOpen}
+                  onClick={(e) => { if (isTouch) { e.preventDefault(); setOpenIndex(isOpen ? null : i); } }}>
+                  {cat.label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
         <ul className="md:hidden flex items-center gap-3 overflow-x-auto no-scrollbar flex-1 px-4">
-          {NAV_ITEMS.slice(1, 7).map((item) => (
-            <li key={item.label}>
-              <a href={item.href} className="block py-1.5 text-[12px] text-[#1d1d1f]/80 whitespace-nowrap">
-                {item.label}
-              </a>
+          {NAV.slice(1, 7).map((cat) => (
+            <li key={cat.label}>
+              <a href={cat.href} className="block py-1.5 text-[12px] text-[#1d1d1f]/80 whitespace-nowrap">{cat.label}</a>
             </li>
           ))}
         </ul>
@@ -64,6 +174,58 @@ export function Navbar() {
           <a href={URLS.bag} aria-label="Shopping Bag" className="px-3 py-2 text-[#1d1d1f]/80 hover:text-[#1d1d1f] transition-colors"><BagIcon /></a>
         </div>
       </nav>
+
+      <AnimatePresence mode="wait">
+        {openIndex !== null && !isTouch && (
+          <motion.div key={openIndex}
+            className="nav-dropdown-panel hidden md:block absolute left-0 right-0 top-[44px] overflow-hidden"
+            initial={{ opacity: 0, y: -8, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -4, scale: 0.98 }}
+            transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
+            onMouseEnter={() => clearTimer()} onMouseLeave={() => closeWithDelay()}
+            role="region" aria-label={`${NAV[openIndex].label} menu`}>
+            <div className="apple-container py-10">
+              <p className="text-apple-muted mb-3 font-normal" style={{ fontSize: 12, letterSpacing: "0.01em" }}>{NAV[openIndex].heading}</p>
+              <motion.ul initial="hidden" animate="visible"
+                variants={{ visible: { transition: { staggerChildren: 0.03 } }, hidden: {} }}
+                className="flex flex-col gap-1">
+                {NAV[openIndex].links.map((link) => (
+                  <motion.li key={link.label}
+                    variants={{ hidden: { opacity: 0, y: 6 }, visible: { opacity: 1, y: 0 } }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}>
+                    <a href={link.href}
+                      className={`block py-1.5 transition-colors hover:text-apple-blue ${link.highlight ? "text-apple-text" : "text-[#1d1d1f]/85"}`}
+                      style={{ fontSize: 22, fontWeight: link.highlight ? 600 : 400, letterSpacing: "-0.005em", lineHeight: 1.18 }}>
+                      {link.label}
+                    </a>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence mode="wait">
+        {openIndex !== null && isTouch && (
+          <motion.div key={`m-${openIndex}`}
+            className="nav-dropdown-panel md:hidden absolute left-0 right-0 top-[44px]"
+            initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.18, ease: [0.25, 0.46, 0.45, 0.94] }}
+            role="region" aria-label={`${NAV[openIndex].label} menu`}>
+            <div className="apple-container py-6">
+              <ul className="flex flex-col gap-1">
+                {NAV[openIndex].links.map((link) => (
+                  <li key={link.label}>
+                    <a href={link.href} className="block py-2 text-apple-text" style={{ fontSize: 18, fontWeight: link.highlight ? 600 : 400 }}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
