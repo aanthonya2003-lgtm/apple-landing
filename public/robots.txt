@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# This is a portfolio/concept landing for iPhone 16 Pro.
+# Apple Inc. trademarks are property of Apple Inc.
