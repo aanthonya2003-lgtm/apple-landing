@@ -2,7 +2,15 @@ import { motion } from "framer-motion";
 import { URLS } from "../data/assets";
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
-interface Service { name: string; tagline: string; price: string; bg: string; href: string; logo: React.ReactNode; }
+
+interface Service {
+  name: string;
+  tagline: string;
+  price: string;
+  bg: string;
+  href: string;
+  logo: React.ReactNode;
+}
 
 const SERVICES: Service[] = [
   { name: "iCloud+", tagline: "Storage and premium features.", price: "From $0.99/mo", bg: "linear-gradient(135deg, #0a84ff 0%, #5856d6 100%)", href: URLS.icloud,
@@ -21,26 +29,73 @@ const SERVICES: Service[] = [
 
 export function ServicesStrip() {
   return (
-    <section className="bg-apple-bg py-24 md:py-32" aria-labelledby="services-title">
+    <section
+      className="bg-apple-bg"
+      style={{
+        paddingTop: "clamp(3.5rem, 7vw, 6rem)",
+        paddingBottom: "clamp(3.5rem, 7vw, 6rem)",
+      }}
+      aria-labelledby="services-title"
+    >
       <div className="apple-container-wide">
-        <motion.h2 id="services-title" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.6, ease }} className="text-section text-apple-text mb-10">
+        <motion.h2
+          id="services-title"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease }}
+          className="text-section text-apple-text mb-10"
+        >
           Apple Services.
         </motion.h2>
-        <div className="flex gap-4 md:gap-5 overflow-x-auto no-scrollbar pb-4 -mx-6 px-6 md:-mx-0 md:px-0" style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}>
+        <div
+          className="flex gap-4 md:gap-5 overflow-x-auto no-scrollbar pb-4 -mx-6 px-6 md:-mx-0 md:px-0"
+          style={{
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
           {SERVICES.map((s, i) => (
-            <motion.a key={s.name} href={s.href} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-60px" }} transition={{ duration: 0.5, ease, delay: i * 0.05 }}
-              className="group relative flex-shrink-0 overflow-hidden text-white p-6" style={{ width: 280, height: 220, borderRadius: 18, background: s.bg, scrollSnapAlign: "start" }}>
+            <motion.a
+              key={s.name}
+              href={s.href}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.7, ease, delay: i * 0.1 }}
+              className="group relative flex-shrink-0 overflow-hidden text-white p-6"
+              style={{
+                width: 280,
+                height: 220,
+                borderRadius: 18,
+                background: s.bg,
+                scrollSnapAlign: "start",
+              }}
+            >
               <div className="absolute top-5 left-5 w-9 h-9 flex items-center justify-center bg-white/10 backdrop-blur-md rounded-xl ring-1 ring-white/15">
                 <span className="w-5 h-5 block">{s.logo}</span>
               </div>
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-3">
                 <div>
-                  <p className="text-[20px] font-semibold leading-tight tracking-tight">{s.name}</p>
-                  <p className="text-[13px] text-white/75 mt-1 leading-tight">{s.tagline}</p>
+                  <p className="text-[20px] font-semibold leading-tight tracking-tight">
+                    {s.name}
+                  </p>
+                  <p className="text-[13px] text-white/75 mt-1 leading-tight">
+                    {s.tagline}
+                  </p>
                 </div>
-                <p className="text-[11px] text-white/85 whitespace-nowrap">{s.price}</p>
+                <p className="text-[11px] text-white/85 whitespace-nowrap">
+                  {s.price}
+                </p>
               </div>
-              <span aria-hidden="true" className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%)" }} />
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background:
+                    "linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%)",
+                }}
+              />
             </motion.a>
           ))}
         </div>
