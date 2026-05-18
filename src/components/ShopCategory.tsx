@@ -2,7 +2,12 @@ import { motion } from "framer-motion";
 import { URLS } from "../data/assets";
 
 const ease = [0.25, 0.46, 0.45, 0.94] as const;
-interface Category { name: string; href: string; icon: React.ReactNode; }
+
+interface Category {
+  name: string;
+  href: string;
+  icon: React.ReactNode;
+}
 
 const CATEGORIES: Category[] = [
   { name: "iPhone", href: URLS.iphone, icon: (<svg viewBox="0 0 60 60" fill="none" stroke="currentColor" strokeWidth={1.3} aria-hidden="true"><rect x="20" y="6" width="20" height="48" rx="4" /><rect x="26" y="11" width="8" height="1.4" rx="0.7" fill="currentColor" stroke="none" /><circle cx="30" cy="49" r="1.2" fill="currentColor" stroke="none" /></svg>) },
@@ -15,17 +20,55 @@ const CATEGORIES: Category[] = [
 
 export function ShopCategory() {
   return (
-    <section className="bg-apple-bg py-24 md:py-32 border-t border-apple-stroke/40" aria-labelledby="shop-title">
+    <section
+      className="bg-apple-bg border-t border-apple-stroke/40"
+      style={{
+        paddingTop: "clamp(3.5rem, 7vw, 6rem)",
+        paddingBottom: "clamp(3.5rem, 7vw, 6rem)",
+      }}
+      aria-labelledby="shop-title"
+    >
       <div className="apple-container-wide text-center">
-        <motion.h2 id="shop-title" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.6, ease }} className="text-section text-apple-text mb-14">
+        <motion.h2
+          id="shop-title"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease }}
+          className="text-section text-apple-text mb-12"
+        >
           Shop Apple.
         </motion.h2>
-        <motion.ul initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-60px" }} variants={{ visible: { transition: { staggerChildren: 0.05 } }, hidden: {} }} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-12 gap-x-6 max-w-[920px] mx-auto">
+        <motion.ul
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.09, delayChildren: 0.1 } },
+            hidden: {},
+          }}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-y-12 gap-x-6 max-w-[920px] mx-auto"
+        >
           {CATEGORIES.map((c) => (
-            <motion.li key={c.name} variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }} transition={{ duration: 0.5, ease }} className="text-center">
-              <a href={c.href} className="group inline-flex flex-col items-center gap-3 transition-transform duration-300">
-                <span className="block w-[60px] h-[60px] text-apple-text group-hover:-translate-y-1 transition-transform duration-300">{c.icon}</span>
-                <span className="text-[14px] font-medium text-apple-text">{c.name}</span>
+            <motion.li
+              key={c.name}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.65, ease }}
+              className="text-center"
+            >
+              <a
+                href={c.href}
+                className="group inline-flex flex-col items-center gap-3 transition-transform duration-300"
+              >
+                <span className="block w-[60px] h-[60px] text-apple-text group-hover:-translate-y-1 transition-transform duration-300">
+                  {c.icon}
+                </span>
+                <span className="text-[14px] font-medium text-apple-text">
+                  {c.name}
+                </span>
               </a>
             </motion.li>
           ))}
